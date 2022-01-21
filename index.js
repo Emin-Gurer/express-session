@@ -3,13 +3,12 @@ const app = express();
 const session = require('express-session');
 
 app.use(
-  session({ secret: 'mysecret', resave: false, saveUninitialized: false })
-); // This secret should be an environment variable in production
-
-//Sessions is stored in JS memoryStore as default
-//This is not reliable in production
-//Refer to express-session docs
-//If you stop server and restart again data will be lost
+  session({
+    secret: 'mysecret',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.get('/viewcount', (req, res, next) => {
   if (req.session.count) {
@@ -18,6 +17,15 @@ app.get('/viewcount', (req, res, next) => {
     req.session.count = 1;
   }
   res.send(`You have visited this page for ${req.session.count} times`);
+});
+
+app.get('/register', (req, res, next) => {
+  const { username = 'Anonymous' } = req.query;
+  req.session.username = username;
+  res.redirect('/greet');
+});
+app.get('/greet', (req, res, next) => {
+  res.send(`Welcome ${req.session.username}`);
 });
 
 app.listen(3000, () => {

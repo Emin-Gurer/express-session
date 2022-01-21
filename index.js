@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 
-app.use(session({ secret: 'mysecret' })); // This secret should be an environment variable in production
+app.use(
+  session({ secret: 'mysecret', resave: false, saveUninitialized: false })
+); // This secret should be an environment variable in production
 
 //Sessions is stored in JS memoryStore as default
 //This is not reliable in production
